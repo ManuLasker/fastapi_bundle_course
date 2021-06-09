@@ -1,0 +1,29 @@
+services:
+    weather_web:
+        build: .
+        volumes: 
+            - type: bind
+              source: .
+              target: /opt/app
+        networks:
+            - weather_web_networks
+        ports: 
+            - 8000:5000
+        entrypoint: 
+            - uvicorn
+            - wsgi:weather_app
+            - --reload
+            - --port
+            - "5000"
+            - --host
+            - "0.0.0.0"
+        env_file: 
+            - .env
+    
+    redis:
+        image: redis
+        networks:
+            - weather_web_networks
+
+networks:
+    weather_web_networks:
